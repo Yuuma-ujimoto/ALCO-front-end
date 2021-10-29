@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="150" height="50" viewBox="0 0 150 50">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#d096db"/>
+      <stop offset="1" stop-color="#54a8d5"/>
+    </linearGradient>
+    <clipPath id="clip-Logo案1_1">
+      <rect width="150" height="50"/>
+    </clipPath>
+  </defs>
+  <g id="Logo案1_1" data-name="Logo案1 – 1" clip-path="url(#clip-Logo案1_1)">
+    <rect width="150" height="50" fill="#fff"/>
+    <text id="Alco" transform="translate(40 28)" fill="#0d2c3f" font-size="42" font-family="AntroVectra, Antro Vectra"><tspan x="0" y="0">Alco</tspan></text>
+    <text id="_" data-name="/" transform="translate(59.029 35.034) rotate(40)" fill="#e0e6ea" font-size="92" font-family="AntroVectra, Antro Vectra"><tspan x="0" y="0">/</tspan></text>
+    <g id="多角形_1" data-name="多角形 1" transform="matrix(-0.999, -0.035, 0.035, -0.999, 36.582, 27.484)" fill="url(#linear-gradient)">
+      <path d="M 30.45511627197266 11.06849670410156 L 1.544883012771606 11.06849670410156 L 15.99999046325684 0.616996169090271 L 30.45511627197266 11.06849670410156 Z" stroke="none"/>
+      <path d="M 15.99999046325684 1.234004974365234 L 3.089778900146484 10.56849670410156 L 28.91021728515625 10.56849670410156 L 15.99999046325684 1.234004974365234 M 15.99999046325684 -2.86102294921875e-06 L 32 11.56849670410156 L 0 11.56849670410156 L 15.99999046325684 -2.86102294921875e-06 Z" stroke="none" fill="#707070"/>
+    </g>
+    <g id="多角形_5" data-name="多角形 5" transform="matrix(0.999, 0.035, -0.035, 0.999, 12.505, 42.233)" fill="url(#linear-gradient)">
+      <path d="M7.5,0,15,1H0Z" stroke="none"/>
+      <path d="M 7.5 0 L 15 1 L 0 1 L 7.5 0 Z" stroke="none" fill="#707070"/>
+    </g>
+    <line id="線_4" data-name="線 4" y1="17" transform="matrix(0.999, 0.035, -0.035, 0.999, 20.793, 26.005)" fill="none" stroke="#707070" stroke-width="1"/>
+  </g>
+</svg>

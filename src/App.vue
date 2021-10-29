@@ -1,7 +1,6 @@
 <template>
   <global-header/>
   <div id="app">
-
     <router-view/>
     <global-modal/>
     <global-toast-alert/>
@@ -20,4 +19,7 @@
   }
 </script>
 <style>
+  body{
+    margin:0;
+  }
 </style>
