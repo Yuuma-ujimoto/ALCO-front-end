@@ -58,7 +58,8 @@ header {
   height: 100%;
   display: flex;
   justify-content: flex-start;
-  padding-left: 5px;
+  padding: 5px;
+  box-sizing: border-box;
 }
 
 .header-right-area {
@@ -103,7 +104,6 @@ header {
 .user-area {
   width: 25%;
   height: 100%;
-  background: #9E9E9E;
   display: flex;
   justify-content: space-around;
   align-items: center;
