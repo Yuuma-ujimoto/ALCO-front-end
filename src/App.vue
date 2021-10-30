@@ -1,6 +1,6 @@
 <template>
   <global-header/>
-  <div id="app">
+  <div id="main">
     <router-view/>
     <global-modal/>
     <global-toast-alert/>
@@ -21,5 +21,14 @@
 <style>
   body{
     margin:0;
+  }
+  #main{
+    margin-top: 170px;
+  }
+  :root{
+    --background-main-color:#F4F5F7;
+    --border-main-color:#bdc3c7;
+    --text-main-color:#34495e;
+    --text-sub-color:#34495e
   }
 </style>

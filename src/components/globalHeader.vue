@@ -46,6 +46,7 @@ header {
   height: 70px;
   display: flex;
   position: fixed;
+  top:0;
   justify-content: space-between;
   background: #ffffff;
   box-sizing: border-box;

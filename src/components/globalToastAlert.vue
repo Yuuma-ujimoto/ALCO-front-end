@@ -1,5 +1,5 @@
 <template>
-  <div class="toast-wrapper">
+  <div v-if="false" class="toast-wrapper">
     <div class="toast">
       <p>A</p>
     </div>
