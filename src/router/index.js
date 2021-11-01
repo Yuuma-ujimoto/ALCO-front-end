@@ -3,6 +3,7 @@ import SignUp from "../views/User/SignUp";
 import SignIn from "../views/User/SignIn";
 import GlobalTimeLine from "../views/Post/GlobalTimeLine";
 import PostForm from "../views/Post/Form";
+import PostUser from "../views/Post/UserPage"
 
 const routes = [
     {
@@ -24,6 +25,11 @@ const routes = [
         path: "/post/form",
         component: PostForm,
         name: "post Form"
+    },
+    {
+        path: "/post/user/:UserId",
+        component: PostUser,
+        name: "post user"
     }
 ]
 

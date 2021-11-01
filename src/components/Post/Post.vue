@@ -13,13 +13,13 @@
             <button
                 class="change-image change-image-left"
                 v-if="index!==0"
-                @click="back"
+                @click="ChangePostImage(SelectImageIndex-1)"
             />
 
             <button
                 class="change-image change-image-right"
                 v-if="index!==PostImageArray.length-1"
-                @click="next"
+                @click="ChangePostImage(SelectImageIndex+1)"
             />
 
 
@@ -30,7 +30,7 @@
               v-for="(image,index) in PostImageArray"
               :key="index"
               class="select-image-button"
-              @click="SelectImageIndex = index"
+              @click="ChangePostImage(index)"
               :class="{'activeButton':index===SelectImageIndex}"
           />
 
@@ -49,39 +49,39 @@
               </div>
             </div>
             <div class="user-name-wrapper">
-              <p class="user-display-name">{{PostData.DisplayName}}</p>
-              <router-link :to="'/user/'+PostData.AccountName" class="user-account-name">@{{PostData.AccountName}}
+              <p class="user-display-name">{{ PostData.DisplayName }}</p>
+              <router-link :to="'/post/user/'+PostData.AccountName" class="user-account-name">@{{ PostData.AccountName }}
               </router-link>
             </div>
           </div>
           <div class="post-info-wrapper">
             <div>
-              <img src="@/assets/move-h-a.svg/" alt="・" class="post-info-image" >
+              <img src="@/assets/move-h-a.svg/" alt="・" class="post-info-image">
             </div>
           </div>
 
         </div>
         <div class="post-caption-area">
-          <p class="post-caption">{{PostData.PostText}}</p>
+          <p class="post-caption">{{ PostData.PostText }}</p>
         </div>
         <div class="created-at-and-favorite-area">
 
           <div class="created-at-area">
-            <p class="created-at-text">{{ PostData.CreatedAt.slice(0,9) }}・{{  PostData.CreatedAt.slice(11,19) }}</p>
+            <p class="created-at-text">{{ PostData.CreatedAt.slice(0, 9) }}・{{ PostData.CreatedAt.slice(11, 19) }}</p>
 
           </div>
           <div class="favorite-area">
-            <FavoriteHeart :on-off="true" @click="FavoriteFunc" />
-            <p>{{}}</p>
+            <FavoriteHeart :on-off="true" />
+            <p>{{!!FavoriteCount?FavoriteCount:0}}</p>
           </div>
         </div>
         <div class="reply-area">
           <div class="reply-content-wrapper"
-               v-for="(Reply,index) in ReplyArray"
+               v-for="(Reply,index) in InComponentReplyArray"
                :key="index">
             <div class="reply-content">
               <p class="reply-user-info">{{ Reply.DisplayName }}
-                <router-link class="reply-account-name" :to="'/user/'">
+                <router-link class="reply-account-name" :to="'/post/user/'+Reply.AccountName">
                   @{{ Reply.AccountName }}
                 </router-link>
               </p>
@@ -92,10 +92,9 @@
       </div>
 
       <div class="reply-send-form-area">
-        <textarea class="reply-input" placeholder="コメント" v-model="ReplySendTextArea" maxlength="200"></textarea>
-        <button type="button" class="reply-submit-button" @click="sendReply"> 投稿</button>
+        <textarea class="reply-input" placeholder="コメント" v-model="ReplyText"  maxlength="200"></textarea>
+        <button type="button" class="reply-submit-button" @click="SendReply"> 投稿</button>
       </div>
-
     </div>
   </div>
 
@@ -103,10 +102,13 @@
 
 <script>
 import FavoriteHeart from "./FavoriteHeart";
+import {BaseUrl} from "../../assets/BaseUrl";
+import axios from "axios";
+
 export default {
   name: "PostStatus",
-  components:{
-    FavoriteHeart
+  components: {
+    FavoriteHeart,
   },
   props: {
     PostData: {
@@ -115,38 +117,77 @@ export default {
     PostImageArray: {
       type: Array
     },
-    ReplyArray:{
-      type:Array
+    ReplyArray: {
+      type: Array
     },
-    FavoriteCount:{
-      type:Number
+    FavoriteCount: {
+      type: Number
     }
   },
   data() {
-    return{
-      SelectImageIndex:0
+    return {
+      SelectImageIndex: null,
+      SelectImageStyle:{},
+      ReplyText:"",
+      InComponentReplyArray:[]//コンポーネント内で使用する返信データ
     }
   },
   mounted() {
-
-    console.log(this.ReplyArray)
-
-    //this.style = this.setImage(this.PostImageArray[0])
-
+    this.SelectImageIndex = 0
+    this.InComponentReplyArray = this.ReplyArray
   },
-  computed:{
-    SelectImageStyle(){
-      return {
-        "transition": "all .4s",
-        "left":(this.SelectImageIndex * -500 ).toString()+"px",
-      }
-    }
-  },
+
   methods: {
-    SetPostImageStyle(image){
+    SetPostImageStyle(image) {
       return {
-        "background-image":"url(http://localhost:3000/"+image+")"
+        "background-image": "url(http://localhost:3000/" + image + ")"
       }
+    },
+    ChangePostImage(Index){
+      this.SelectImageIndex = Index
+      this.SelectImageStyle = {
+        "transition": "all .4s",
+        "left": (Index * -500).toString() + "px",
+      }
+    },
+    SendReply:async function(){
+      if (!this.ReplyText.length){
+        //後でアラート処理
+        return
+      }
+      const url = BaseUrl+"/post/reply"
+      const PostParams = new URLSearchParams()
+      PostParams.append("ReplyText",this.ReplyText)
+      PostParams.append("PostId",this.PostData.PostId)
+      const Token = await this.$store.getters.getToken
+      const config = {
+        headers:{
+          token:Token
+        }
+      }
+      const result = await axios.post(url,PostParams,config)
+      console.log(result)
+      // ここで内部変数に返信内容を渡してDataの方の変数を消去
+      const ReplyText = this.ReplyText
+      this.ReplyText = ""
+
+      if (result.data.ServerError){
+
+        // Alert: Type Error Message result.data.Message
+        return
+      }
+      if (result.data.ClientError){
+        // Alert: Type Warning Message result.data.Message
+        return
+      }
+      const AccountName = await this.$store.getters.getAccountName
+      const DisplayName = await this.$store.getters.getDisplayName
+      this.InComponentReplyArray.push({
+        DisplayName: DisplayName,
+        AccountName: AccountName,
+        PostReplyText:ReplyText
+      })
+
     }
   }
 }
@@ -155,11 +196,10 @@ export default {
 <style scoped>
 
 
-
 .post-wrapper {
   width: 800px;
   margin-bottom: 25px;
-  border:solid 1px var(--border-main-color);
+  border: solid 1px var(--border-main-color);
   display: flex;
   justify-content: flex-start;
   border-radius: 10px;
@@ -167,7 +207,7 @@ export default {
   overflow: hidden;
 }
 
-.post-status-left{
+.post-status-left {
   background: var(--background-main-color);
 
 }
@@ -218,10 +258,10 @@ export default {
   margin: 5px;
   background: #7f8c8d;
 }
+
 .activeButton {
   background: #bdc3c7;
 }
-
 
 
 .post-image-preview {
@@ -232,8 +272,6 @@ export default {
   overflow: hidden;
   position: relative;
 }
-
-
 
 
 .change-image {
@@ -250,7 +288,7 @@ export default {
 
 }
 
-.change-image-left:after{
+.change-image-left:after {
   content: "";
   display: block;
   width: 8px;
@@ -264,7 +302,7 @@ export default {
   color: inherit;
 }
 
-.change-image-right:after{
+.change-image-right:after {
   content: "";
   display: block;
   width: 8px;
@@ -286,12 +324,14 @@ export default {
   flex-direction: column;
   justify-content: space-between;
 }
+
 .post-status-right-top {
   width: 300px;
   height: 100%;
   border-top-right-radius: 10px;
   overflow: hidden;
 }
+
 .post-caption-area {
   width: 100%;
   height: 25%;
@@ -302,6 +342,7 @@ export default {
   box-sizing: border-box;
   border-bottom: solid 1px var(--border-main-color);
 }
+
 .created-at-and-favorite-area {
   width: 100%;
   height: 10%;
@@ -312,23 +353,28 @@ export default {
   align-items: center;
   justify-content: space-between;
 }
-.created-at-area{
+
+.created-at-area {
   width: 70%;
 }
-.favorite-area{
+
+.favorite-area {
   width: 30%;
   display: flex;
   align-items: center;
 }
+
 .created-at-text {
   margin-left: 10px;
   font-size: 12px;
   color: var(--text-sub-color);
 }
+
 .post-caption {
   white-space: break-spaces;
   margin: 0;
 }
+
 .user-status-area {
   margin-top: 10px;
   width: 100%;
@@ -342,38 +388,46 @@ export default {
   justify-content: space-between;
   border-bottom: solid 1px var(--border-main-color);
 }
-.user-info-wrapper{
+
+.user-info-wrapper {
   display: flex;
 }
-.post-info-wrapper{
+
+.post-info-wrapper {
   display: flex;
   align-items: center;
   margin-right: 15px;
 }
-.post-info-image{
+
+.post-info-image {
   width: 20px;
 }
+
 .user-name-wrapper {
   margin-left: 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
+
 .user-display-name {
   margin: 0;
   font-size: 18px;
 }
+
 .user-account-name {
   margin: 0;
   font-size: 12px;
   text-decoration: none;
   color: #34495e;
 }
+
 .user-icon-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 .user-icon {
   width: 40px;
   height: 40px;
@@ -382,24 +436,22 @@ export default {
   border: solid 1px var(--border-main-color);
   border-radius: 5px;
 }
-.reply-send-form-area {
-  display: flex;
-  justify-content: space-between;
-  height: 20%;
-  align-items: center;
-}
+
+
 .reply-area {
   height: 45%;
   border-bottom: solid 1px var(--border-main-color);
   box-sizing: border-box;
   overflow-y: auto;
 }
+
 .reply-content-wrapper {
   width: 100%;
   min-height: 25%;
   display: flex;
   justify-content: flex-start;
 }
+
 .reply-content {
   width: 100%;
   /*height: 100%;*/
@@ -408,16 +460,28 @@ export default {
   background: #dcdde1;
   border-bottom: solid 1px var(--border-main-color);
 }
+
 .reply-user-info {
   font-size: 12px;
 }
+
 .reply-account-name {
   text-decoration: none;
   color: var(--text-sub-color);
 }
+
 .reply-text {
   white-space: break-spaces;
 }
+
+.reply-send-form-area {
+  display: flex;
+  justify-content: space-between;
+  height: 20%;
+  align-items: center;
+}
+
+
 .reply-input {
   width: 75%;
   outline: none;
@@ -427,11 +491,13 @@ export default {
   padding: 5px 5px 5px 10px;
   box-sizing: border-box;
 }
+
 .reply-input:focus {
   outline: none;
   border: none;
   height: 100%;
 }
+
 .reply-submit-button {
   outline: none;
   border: none;
@@ -439,6 +505,7 @@ export default {
   border-bottom-right-radius: 10px;
   height: 100%;
 }
+
 .reply-submit-button:focus {
   outline: none;
   border: none;

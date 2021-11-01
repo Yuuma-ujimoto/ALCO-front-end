@@ -4,7 +4,9 @@ import createPersistedState from "vuex-persistedstate";
 export default createStore({
     state: {
         ModalId: "",
-        Token: null
+        Token: null,
+        AccountName:null,
+        DisplayName:null
     },
     getters: {
         isLogin: (state) => {
@@ -12,17 +14,25 @@ export default createStore({
         },
         getToken: (state) => {
             return state.Token
+        },
+        getAccountName:(state)=>{
+            return state.AccountName
+        },
+        getDisplayName:(state)=>{
+            return state.DisplayName
         }
     }
     ,
     mutations: {
-        updateToken(state, Token) {
-            state.Token = Token
+        updateToken(state, Result) {
+            state.Token = Result.Token
+            state.AccountName = Result.AccountName
+            state.DisplayName = Result.DisplayName
         }
     },
     actions: {
-        login(context, Token) {
-            context.commit("updateToken", Token)
+        login(context, Result) {
+            context.commit("updateToken", Result)
         },
         logout(context) {
             context.commit("updateToken", null)

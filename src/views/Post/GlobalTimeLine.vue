@@ -1,11 +1,12 @@
 <template>
   <div class="timeline-wrapper">
-      <Post
-          v-for="(PostData) of PostResult" :key="PostData.PostId"
-          :PostData="PostData"
-          :PostImageArray="PostImageResult[PostData.PostId]"
-          :ReplyArray="ReplyResult[PostData.PostId]"
-      ></Post>
+    <Post
+        v-for="(PostData) of PostResult" :key="PostData.PostId"
+        :PostData="PostData"
+        :PostImageArray="PostImageResult[PostData.PostId]"
+        :ReplyArray="ReplyResult[PostData.PostId]"
+        :FavoriteCount="FavoriteResult[PostData.PostId]"
+    ></Post>
   </div>
 </template>
 
@@ -17,15 +18,15 @@ import Post from "../../components/Post/Post";
 export default {
   name: "TimeLine",
 
-  components:{
+  components: {
     Post
   },
-  data(){
-    return{
-      PostResult:[],
-      PostImageResult:[],
-      ReplyResult:[],
-      FavoriteResult:[]
+  data() {
+    return {
+      PostResult: [],
+      PostImageResult: [],
+      ReplyResult: [],
+      FavoriteResult: []
     }
   },
   mounted() {
@@ -52,7 +53,7 @@ export default {
 </script>
 
 <style scoped>
-.timeline-wrapper{
+.timeline-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;

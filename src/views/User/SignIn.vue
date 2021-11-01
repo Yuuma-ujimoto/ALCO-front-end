@@ -44,16 +44,24 @@ export default {
         PostParams.append(Param.toString(), this.PostParams[Param])
       }
       const result = await axios.post(url,PostParams)
+      const ResultData = result.data
       console.log(result)
-      if (result.data.ServerError){
+      if (ResultData.ServerError){
         console.log(result.data.ServerError)
         return
       }
-      if (result.data.ClientError){
+      if (ResultData.ClientError){
         console.log(result.data.ClientError)
         return
       }
-      await this.$store.dispatch("login",result.data.Token)
+
+      const UserData = {
+        Token:ResultData.Token,
+        AccountName:ResultData.AccountName,
+        DisplayName:ResultData.DisplayName
+      }
+
+      await this.$store.dispatch("login",UserData)
       await this.$router.push({path:"/"})
     }
   }
