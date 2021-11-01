@@ -22,6 +22,9 @@
   body{
     margin:0;
   }
+  p{
+    margin:0;
+  }
   #main{
     margin-top: 170px;
   }

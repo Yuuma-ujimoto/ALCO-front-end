@@ -51,6 +51,7 @@ header {
   background: #ffffff;
   box-sizing: border-box;
   border-bottom: solid 1px #222222;
+  z-index: 10000;
 }
 
 .header-left-area {

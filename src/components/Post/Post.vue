@@ -1,0 +1,447 @@
+<template>
+  <div class="post-wrapper">
+    <div class="post-status-left" v-on:keydown.right="console.log('a')">
+      <div class="post-image-preview">
+        <div class="select-image-wrapper" :style="SelectImageStyle">
+          <div
+              v-for="(image,index) in PostImageArray"
+              :key="index"
+              class="post-image"
+              :class="{'first-img':index===0}"
+              :style="SetPostImageStyle(image)"
+          >
+            <button
+                class="change-image change-image-left"
+                v-if="index!==0"
+                @click="back"
+            />
+
+            <button
+                class="change-image change-image-right"
+                v-if="index!==PostImageArray.length-1"
+                @click="next"
+            />
+
+
+          </div>
+        </div>
+        <div class="select-image-button-wrapper">
+          <div
+              v-for="(image,index) in PostImageArray"
+              :key="index"
+              class="select-image-button"
+              @click="SelectImageIndex = index"
+              :class="{'activeButton':index===SelectImageIndex}"
+          />
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="post-status-right">
+      <div class="post-status-right-top">
+        <div class="user-status-area">
+          <div class="user-info-wrapper">
+            <div class="user-icon-wrapper">
+              <div class="user-icon">
+
+              </div>
+            </div>
+            <div class="user-name-wrapper">
+              <p class="user-display-name">{{PostData.DisplayName}}</p>
+              <router-link :to="'/user/'+PostData.AccountName" class="user-account-name">@{{PostData.AccountName}}
+              </router-link>
+            </div>
+          </div>
+          <div class="post-info-wrapper">
+            <div>
+              <img src="@/assets/move-h-a.svg/" alt="・" class="post-info-image" >
+            </div>
+          </div>
+
+        </div>
+        <div class="post-caption-area">
+          <p class="post-caption">{{PostData.PostText}}</p>
+        </div>
+        <div class="created-at-and-favorite-area">
+
+          <div class="created-at-area">
+            <p class="created-at-text">{{ PostData.CreatedAt.slice(0,9) }}・{{  PostData.CreatedAt.slice(11,19) }}</p>
+
+          </div>
+          <div class="favorite-area">
+            <FavoriteHeart :on-off="true" @click="FavoriteFunc" />
+            <p>{{}}</p>
+          </div>
+        </div>
+        <div class="reply-area">
+          <div class="reply-content-wrapper"
+               v-for="(Reply,index) in ReplyArray"
+               :key="index">
+            <div class="reply-content">
+              <p class="reply-user-info">{{ Reply.DisplayName }}
+                <router-link class="reply-account-name" :to="'/user/'">
+                  @{{ Reply.AccountName }}
+                </router-link>
+              </p>
+              <p class="reply-text">{{ Reply.PostReplyText }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reply-send-form-area">
+        <textarea class="reply-input" placeholder="コメント" v-model="ReplySendTextArea" maxlength="200"></textarea>
+        <button type="button" class="reply-submit-button" @click="sendReply"> 投稿</button>
+      </div>
+
+    </div>
+  </div>
+
+</template>
+
+<script>
+import FavoriteHeart from "./FavoriteHeart";
+export default {
+  name: "PostStatus",
+  components:{
+    FavoriteHeart
+  },
+  props: {
+    PostData: {
+      type: Object
+    },
+    PostImageArray: {
+      type: Array
+    },
+    ReplyArray:{
+      type:Array
+    },
+    FavoriteCount:{
+      type:Number
+    }
+  },
+  data() {
+    return{
+      SelectImageIndex:0
+    }
+  },
+  mounted() {
+
+    console.log(this.ReplyArray)
+
+    //this.style = this.setImage(this.PostImageArray[0])
+
+  },
+  computed:{
+    SelectImageStyle(){
+      return {
+        "transition": "all .4s",
+        "left":(this.SelectImageIndex * -500 ).toString()+"px",
+      }
+    }
+  },
+  methods: {
+    SetPostImageStyle(image){
+      return {
+        "background-image":"url(http://localhost:3000/"+image+")"
+      }
+    }
+  }
+}
+</script>
+
+<style scoped>
+
+
+
+.post-wrapper {
+  width: 800px;
+  margin-bottom: 25px;
+  border:solid 1px var(--border-main-color);
+  display: flex;
+  justify-content: flex-start;
+  border-radius: 10px;
+  background: var(--background-main-color);
+  overflow: hidden;
+}
+
+.post-status-left{
+  background: var(--background-main-color);
+
+}
+
+.post-image {
+  min-width: 500px;
+  height: 500px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  overflow: hidden;
+  box-sizing: border-box;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.first-img {
+  justify-content: flex-end;
+}
+
+
+.select-image-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  width: 500px;
+  height: 500px;
+  position: relative;
+  left: 0;
+
+}
+
+.select-image-button-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 500px;
+  position: absolute;
+  bottom: 10px;
+  box-sizing: border-box;
+}
+
+.select-image-button {
+  border-radius: 100%;
+  height: 18px;
+  width: 18px;
+  /*background: var(--background-main-color);*/
+  margin: 5px;
+  background: #7f8c8d;
+}
+.activeButton {
+  background: #bdc3c7;
+}
+
+
+
+.post-image-preview {
+  /*width: 75%;*/
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+
+
+
+.change-image {
+  outline: none;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 30px;
+  margin: 16px 8px;
+  text-align: center;
+  opacity: 0.8;
+  font-size: 20px;
+  position: relative;
+
+}
+
+.change-image-left:after{
+  content: "";
+  display: block;
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  right: 4px;
+  top: calc(50% - 9px);
+  border-top: solid 2px;
+  border-right: solid 2px;
+  transform: rotate(225deg) translateY(-50%);
+  color: inherit;
+}
+
+.change-image-right:after{
+  content: "";
+  display: block;
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  right: 16px;
+  top: calc(50% - 2px);
+  border-top: solid 2px;
+  border-right: solid 2px;
+  transform: rotate(45deg) translateY(-50%);
+  color: inherit;
+}
+
+.post-status-right {
+  width: 300px;
+  box-sizing: border-box;
+  border-left: solid 1px var(--border-main-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.post-status-right-top {
+  width: 300px;
+  height: 100%;
+  border-top-right-radius: 10px;
+  overflow: hidden;
+}
+.post-caption-area {
+  width: 100%;
+  height: 25%;
+  max-height: 200px;
+  background: var(--background-main-color);
+  overflow-y: auto;
+  padding: 10px;
+  box-sizing: border-box;
+  border-bottom: solid 1px var(--border-main-color);
+}
+.created-at-and-favorite-area {
+  width: 100%;
+  height: 10%;
+  max-height: 40px;
+  box-sizing: border-box;
+  border-bottom: solid 1px var(--border-main-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.created-at-area{
+  width: 70%;
+}
+.favorite-area{
+  width: 30%;
+  display: flex;
+  align-items: center;
+}
+.created-at-text {
+  margin-left: 10px;
+  font-size: 12px;
+  color: var(--text-sub-color);
+}
+.post-caption {
+  white-space: break-spaces;
+  margin: 0;
+}
+.user-status-area {
+  margin-top: 10px;
+  width: 100%;
+  height: calc(20% - 10px);
+  max-height: 100px;
+  background: var(--background-main-color);
+  overflow-y: auto;
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: solid 1px var(--border-main-color);
+}
+.user-info-wrapper{
+  display: flex;
+}
+.post-info-wrapper{
+  display: flex;
+  align-items: center;
+  margin-right: 15px;
+}
+.post-info-image{
+  width: 20px;
+}
+.user-name-wrapper {
+  margin-left: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.user-display-name {
+  margin: 0;
+  font-size: 18px;
+}
+.user-account-name {
+  margin: 0;
+  font-size: 12px;
+  text-decoration: none;
+  color: #34495e;
+}
+.user-icon-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.user-icon {
+  width: 40px;
+  height: 40px;
+  margin: 5px;
+  box-sizing: border-box;
+  border: solid 1px var(--border-main-color);
+  border-radius: 5px;
+}
+.reply-send-form-area {
+  display: flex;
+  justify-content: space-between;
+  height: 20%;
+  align-items: center;
+}
+.reply-area {
+  height: 45%;
+  border-bottom: solid 1px var(--border-main-color);
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+.reply-content-wrapper {
+  width: 100%;
+  min-height: 25%;
+  display: flex;
+  justify-content: flex-start;
+}
+.reply-content {
+  width: 100%;
+  /*height: 100%;*/
+  padding: 5px 5px 5px 10px;
+  box-sizing: border-box;
+  background: #dcdde1;
+  border-bottom: solid 1px var(--border-main-color);
+}
+.reply-user-info {
+  font-size: 12px;
+}
+.reply-account-name {
+  text-decoration: none;
+  color: var(--text-sub-color);
+}
+.reply-text {
+  white-space: break-spaces;
+}
+.reply-input {
+  width: 75%;
+  outline: none;
+  border: none;
+  resize: none;
+  height: 100%;
+  padding: 5px 5px 5px 10px;
+  box-sizing: border-box;
+}
+.reply-input:focus {
+  outline: none;
+  border: none;
+  height: 100%;
+}
+.reply-submit-button {
+  outline: none;
+  border: none;
+  width: 25%;
+  border-bottom-right-radius: 10px;
+  height: 100%;
+}
+.reply-submit-button:focus {
+  outline: none;
+  border: none;
+}
+
+</style>
