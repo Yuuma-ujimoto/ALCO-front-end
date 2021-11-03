@@ -1,27 +1,49 @@
 <template>
   <header>
     <div class="header-left-area">
-      <img src="../assets/Logo.svg" alt="Alco">
+      <router-link to="/">
+        <img src="../assets/Logo.svg" alt="Alco">
+      </router-link>
     </div>
 
     <div class="header-right-area">
       <div class="link-area">
-        <div class="main-link-box">
-          <router-link to="/post/timeline" class="main-link">Post</router-link>
+
+        <div class="link-wrapper">
+          <div class="main-link">
+            <img src="../assets/cocktail.svg" alt="" class="icon">
+            <router-link to="/post/timeline" class="header-link">Post</router-link>
+          </div>
+          <div class="sub-link">
+            <img src="../assets/edit_black_24dp.svg" alt="" class="icon">
+            <router-link to="/post/form" class="header-link">Form</router-link>
+          </div>
         </div>
 
-        <div class="main-link-box">
-          <router-link to="/article" class="main-link">Article</router-link>
+        <div class="link-wrapper">
+          <div class="main-link">
+            <img src="../assets/article_black_24dp.svg" alt="" class="icon">
+            <router-link to="/article/all" class="header-link">Article</router-link>
+          </div>
+          <div class="sub-link">
+            <img src="../assets/edit_black_24dp.svg" alt="" class="icon">
+            <router-link to="/article/form" class="header-link">Form</router-link>
+          </div>
+          <div class="sub-link">
+            <img src="../assets/search.svg" alt="" class="icon">
+            <router-link to="/article/search" class="header-link">Search</router-link>
+          </div>
         </div>
 
 
       </div>
-      <div class="user-area">
+      <div class="user-area"
+      >
         <div class="user-area-link sign-up-area">
-          <router-link to="/SignUp" class="sub-link">Sign Up</router-link>
+          <router-link to="/SignUp" class="user-link">Sign Up</router-link>
         </div>
         <div class="user-area-link sign-in-area">
-          <router-link to="/SignIn" class="sub-link">Sign In</router-link>
+          <router-link to="/SignIn" class="user-link">Sign In</router-link>
         </div>
       </div>
     </div>
@@ -36,9 +58,11 @@ export default {
 
 <style scoped>
 
-.icon {
+.icon{
   width: 20px;
   height: 20px;
+  margin-right:  4px;
+  margin-bottom: 5px;
 }
 
 header {
@@ -46,7 +70,7 @@ header {
   height: 70px;
   display: flex;
   position: fixed;
-  top:0;
+  top: 0;
   justify-content: space-between;
   background: #ffffff;
   box-sizing: border-box;
@@ -72,39 +96,57 @@ header {
 }
 
 .link-area {
-  width: 75%;
+  width: 65%;
   height: 100%;
   display: flex;
-  /*justify-content: space-between;*/
-}
-
-
-.main-link-box {
-  width: 100px;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  padding-left: 10px;
-  padding-bottom: 5px;
-  box-sizing: border-box;
 }
 
 .main-link {
-  font-size: 20px;
-  text-decoration: none;
+  width: 200px;
+  margin: 0;
+  display: flex;
+  height: 70px;
+  justify-content: flex-start;
+  align-items: center;
+  background: #fff;
+  border-bottom: solid 1px #222;
+  box-sizing: border-box;
+  padding-left: 40px;
+
+}
+
+.sub-link {
+  display: flex;
+  width: 200px;
+  height: 70px;
+  justify-content: flex-start;
+  align-items: center;
+  background: #fff;
+  box-sizing: border-box;
+  border: solid 1px #222;
+  border-top:none ;
+  padding-left: 40px;
+  visibility: visible;
+  opacity: 0;
+  position: absolute;
+}
+
+.header-link{
+  font-size: 22px;
   color: #222222;
 }
 
+.link-wrapper:hover > .sub-link {
+  transition: .4s;
+  opacity: 1;
+  position: relative;
+  top: 0;
 
-
-.sub-link {
-  font-size: 16px;
-  color: #222;
-  text-decoration: none;
 }
 
+
 .user-area {
-  width: 25%;
+  width: 35%;
   height: 100%;
   display: flex;
   justify-content: space-around;
@@ -120,6 +162,13 @@ header {
   border-radius: 10px;
 }
 
+.user-link{
+  font-size: 18px;
+  text-decoration: none;
+  color: #222;
+
+}
+
 .sign-in-area {
   background: powderblue;
 }
@@ -127,5 +176,4 @@ header {
 .sign-up-area {
   background: gold;
 }
-
 </style>

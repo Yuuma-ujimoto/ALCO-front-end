@@ -71,8 +71,8 @@
 
           </div>
           <div class="favorite-area">
-            <FavoriteHeart :on-off="true" />
-            <p>{{!!FavoriteCount?FavoriteCount:0}}</p>
+            <div  @click="SendFavorite"><FavoriteHeart :Fav="InComponentFavoriteBool" /></div>
+            <p>{{!!InComponentFavoriteCount?InComponentFavoriteCount:0}}</p>
           </div>
         </div>
         <div class="reply-area">
@@ -118,10 +118,14 @@ export default {
       type: Array
     },
     ReplyArray: {
-      type: Array
+      type: [Array],
+      default:()=>[]
     },
     FavoriteCount: {
       type: Number
+    },
+    MyFavoriteBool:{
+      type:Boolean
     }
   },
   data() {
@@ -129,12 +133,17 @@ export default {
       SelectImageIndex: null,
       SelectImageStyle:{},
       ReplyText:"",
-      InComponentReplyArray:[]//コンポーネント内で使用する返信データ
+      InComponentReplyArray:[],//コンポーネント内で使用する返信データ
+      InComponentFavoriteBool:false,//コンポーネント内で使用するFAV情報
+      InComponentFavoriteCount:0
     }
   },
   mounted() {
     this.SelectImageIndex = 0
     this.InComponentReplyArray = this.ReplyArray
+    this.InComponentFavoriteBool = this.MyFavoriteBool
+    this.InComponentFavoriteCount = this.FavoriteCount
+
   },
 
   methods: {
@@ -188,6 +197,40 @@ export default {
         PostReplyText:ReplyText
       })
 
+    },
+    SendFavorite:async function(){
+      const url = BaseUrl + "/post/favorite"
+      const PostParams = new URLSearchParams()
+      PostParams.append("PostId",this.PostData.PostId)
+      const token = await this.$store.getters.getToken
+      const config = {
+        headers: {
+          token:token
+        }
+      }
+      const result = await axios.post(url,PostParams,config)
+      console.log(result)
+      if (result.data.ServerError){
+        // Alert: type Error
+        return
+      }
+      if (result.data.ClientError){
+        // Alert : type Warning
+        return
+      }
+
+      if (result.data.Type==="Insert"){
+        this.InComponentFavoriteCount++
+        this.InComponentFavoriteBool = true
+      }
+      else if(result.data.Type==="Delete") {
+        this.InComponentFavoriteCount--
+        this.InComponentFavoriteBool = false
+      }
+      else{
+        // Alert:本来あり得ない処理だから追加しなくていいかもしれない
+        return
+      }
     }
   }
 }

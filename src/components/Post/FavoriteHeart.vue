@@ -1,8 +1,8 @@
 <template>
-  <div class="favHeart" v-if="OnOff">
+  <div class="favHeart" v-show="Fav">
     <img src="../../assets/heart.svg" alt="">
   </div>
-  <div class="favHeart" v-else>
+  <div class="favHeart" v-show="!Fav">
     <img src="../../assets/heart-alt.svg" alt="">
   </div>
 </template>
@@ -11,7 +11,7 @@
 export default {
   name: "favHeart",
   props:{
-    OnOff:{
+    Fav:{
       type:Boolean,
       default:true
     }

@@ -25,9 +25,15 @@ export default createStore({
     ,
     mutations: {
         updateToken(state, Result) {
-            state.Token = Result.Token
-            state.AccountName = Result.AccountName
-            state.DisplayName = Result.DisplayName
+            if (!Result) {
+                state.Token = null
+                state.AccountName = null
+                state.DisplayName = null
+            } else {
+                state.Token = Result.Token
+                state.AccountName = Result.AccountName
+                state.DisplayName = Result.DisplayName
+            }
         }
     },
     actions: {

@@ -24,7 +24,9 @@ export default {
 body {
   margin: 0;
 }
-
+a{
+  text-decoration: none;
+}
 p {
   margin: 0;
 }

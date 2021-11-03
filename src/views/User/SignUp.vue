@@ -132,7 +132,12 @@ export default {
         return
       }
       console.log(ResultData.Token)
-      await this.$store.dispatch("login", ResultData.Token)
+      const UserData = {
+        Token:ResultData.Token,
+        AccountName: ResultData.AccountName,
+        DisplayName: ResultData.DisplayName
+      }
+      await this.$store.dispatch("login",UserData)
       await this.$router.push({path: "/"})
     }
   }

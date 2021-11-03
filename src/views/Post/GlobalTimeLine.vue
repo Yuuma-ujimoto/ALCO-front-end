@@ -6,6 +6,7 @@
         :PostImageArray="PostImageResult[PostData.PostId]"
         :ReplyArray="ReplyResult[PostData.PostId]"
         :FavoriteCount="FavoriteResult[PostData.PostId]"
+        :MyFavoriteBool="MyFavoriteResult.indexOf(PostData.PostId)!==-1"
     ></Post>
   </div>
 </template>
@@ -26,7 +27,8 @@ export default {
       PostResult: [],
       PostImageResult: [],
       ReplyResult: [],
-      FavoriteResult: []
+      FavoriteResult: [],
+      MyFavoriteResult:[]
     }
   },
   mounted() {
@@ -47,6 +49,7 @@ export default {
       this.PostImageResult = result.data.PostImageResult
       this.ReplyResult = result.data.ReplyResult
       this.FavoriteResult = result.data.FavoriteResult
+      this.MyFavoriteResult = result.data.MyFavoriteResult
     }
   }
 }
