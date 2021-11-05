@@ -72,7 +72,7 @@
           </div>
           <div class="favorite-area">
             <div  @click="SendFavorite"><FavoriteHeart :Fav="InComponentFavoriteBool" /></div>
-            <p>{{!!InComponentFavoriteCount?InComponentFavoriteCount:0}}</p>
+            <p>{{InComponentFavoriteCount}}</p>
           </div>
         </div>
         <div class="reply-area">
@@ -142,7 +142,10 @@ export default {
     this.SelectImageIndex = 0
     this.InComponentReplyArray = this.ReplyArray
     this.InComponentFavoriteBool = this.MyFavoriteBool
-    this.InComponentFavoriteCount = this.FavoriteCount
+    if (this.FavoriteCount){
+      this.InComponentFavoriteCount = this.FavoriteCount
+    }
+
 
   },
 

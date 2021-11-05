@@ -32,7 +32,7 @@ p {
 }
 
 #main {
-  margin-top: 170px;
+  margin-top: 70px;
 }
 
 :root {

@@ -1,13 +1,221 @@
 <template>
+  <div class="cocktail-wrapper">
+    <div class="cocktail-form">
+      <div class="title-wrapper">
+        <input class="post-title" type="text" v-model="title" placeholder="title">
+      </div>
 
+      <div class="mode-wrapper">
+        <input id="write-mode" type="radio" name="toggle" value="write" v-model="mode" checked>
+        <label class="mode-label" for="write-mode">
+          書き込み
+        </label>
+
+        <input id="preview-mode" type="radio" v-model="mode" value="preview" name="toggle">
+        <label class="mode-label" for="preview-mode">
+          プレビュー
+        </label>
+
+        <input id="hybrid-mode" type="radio" v-model="mode" value="hybrid" name="toggle">
+        <label class="mode-label" for="hybrid-mode">
+          分割
+        </label>
+
+      </div>
+      <div v-if="mode==='write'" class="post-contents-wrapper">
+        <textarea class="post-contents" v-model="content" placeholder="書き込みエリア"></textarea>
+
+      </div>
+      <div v-else-if="mode==='preview'" class="post-contents-wrapper">
+        <Markdown class="post-preview" :source="content" :language="'ja'"/>
+      </div>
+      <div v-else class="hybrid-wrapper">
+        <textarea class="hybrid-contents" v-model="content" placeholder="書き込みエリア"></textarea>
+        <Markdown class="hybrid-preview" :source="content" :language="'ja'"/>
+
+      </div>
+      <div class="submit-wrapper">
+        <button class="submit-button">投稿</button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
+
+import Markdown from 'vue3-markdown-it';
+
 export default {
-  name: "Form"
+  name: "CocktailForm",
+  components: {
+    Markdown
+  },
+  data() {
+    return {
+      content: '',
+      mode: "hybrid"
+    }
+  }
 }
+
 </script>
 
 <style scoped>
+
+.mode-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  width: 80%;
+  padding-left: 15px;
+}
+
+#write-mode, #preview-mode, #hybrid-mode {
+  display: none;
+}
+
+.mode-label {
+  width: 200px;
+  height: 50px;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  display: flex;
+  background-color: #7f8c8d;
+  color: #F4F5F7;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+}
+
+#write-mode:checked + .mode-label,
+#preview-mode:checked + .mode-label,
+#hybrid-mode:checked + .mode-label {
+  background: #F4F5F7;
+  color: #7f8c8d;
+}
+
+
+.cocktail-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cocktail-form {
+  width: 100%;
+  background: #bdc3c7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 5%;
+}
+
+.title-wrapper {
+  width: 100%;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.post-title {
+  width: 80%;
+  height: 50%;
+  background: none;
+  font-size: 28px;
+  outline: none;
+  border: none;
+}
+
+.post-contents-wrapper {
+  width: 80%;
+  height: 500px;
+  display: flex;
+  justify-content: space-between;
+  background: #F4F5F7;
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.hybrid-wrapper {
+  width: 80%;
+  height: 500px;
+  display: flex;
+  justify-content: space-between;
+  background: #F4F5F7;
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.hybrid-contents {
+  width: 50%;
+  height: 500px;
+  background: #F4F5F7;
+  padding: 25px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  margin: 0;
+  outline: none;
+  border: none;
+  font-size: 20px;
+  resize: none;
+}
+
+.hybrid-preview {
+  width: 50%;
+  border-left: solid 1px #000;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow-y: auto;
+
+}
+
+.post-contents {
+  width: 100%;
+  height: 500px;
+  background: #F4F5F7;
+  padding: 25px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  margin: 0;
+  outline: none;
+  border: none;
+  font-size: 20px;
+  resize: none;
+}
+
+.post-preview{
+  overflow-y: auto;
+  width: 100%;
+}
+
+.post-options {
+  width: 15%;
+  height: 200px;
+  background: #000;
+  border-radius: 10px;
+}
+
+.post-contents:focus {
+  outline: none;
+  border: none;
+}
+
+.submit-wrapper{
+  width: 80%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.submit-button{
+  width: 100px;
+  height: 50px;
+  border: none;
+  outline: none;
+}
 
 </style>
