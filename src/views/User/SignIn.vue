@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="form-wrapper">
     <form @submit.prevent="Submit">
       <dl>
         <dt>
@@ -69,5 +69,31 @@ export default {
 </script>
 
 <style scoped>
+
+.form-wrapper{
+  display: flex;
+  width: 80%;
+  margin:0 auto;
+  justify-content: center;
+}
+
+input{
+  width: 400px;
+  height: 40px;
+  padding: 10px;
+  box-sizing: border-box;
+  font-size: 16px;
+  border: solid 1px #222;
+}
+dd,dt{
+  margin-bottom: 15px;
+}
+input:focus{
+  outline: none;
+}
+input:-webkit-autofill{
+  background-color: #fff;
+}
+
 
 </style>

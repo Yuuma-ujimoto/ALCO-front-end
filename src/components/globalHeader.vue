@@ -46,13 +46,42 @@
           <router-link to="/SignIn" class="user-link">Sign In</router-link>
         </div>
       </div>
+      <div class="notice-area">
+        <div class="notice" v-if="this.$store.getters.isLogin">
+          <p>{{NoticeCount}}</p>
+        </div>
+      </div>
     </div>
   </header>
 </template>
 
 <script>
+import axios from "axios";
+import {BaseUrl} from "../assets/BaseUrl";
 export default {
-  name: "globalHeader"
+  name: "globalHeader",
+  data(){
+    return{
+      NoticeCount:0
+    }
+  },
+  watch:{
+  $route:async function () {
+    console.log("router change")
+    if (this.$store.getters.isLogin) {
+      const NoticeCountURL = BaseUrl + "/notice/count"
+      const token = await this.$store.getters.getToken
+      const config = {
+        headers: {
+          token
+        }
+      }
+      const NoticeCountResult = await axios.get(NoticeCountURL, config)
+      console.log(NoticeCountResult)
+      this.NoticeCount = NoticeCountResult.data.NoticeCount
+    }
+  }
+}
 }
 </script>
 

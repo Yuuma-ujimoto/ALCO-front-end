@@ -12,13 +12,13 @@
           >
             <button
                 class="change-image change-image-left"
-                v-if="index!==0"
+                v-show="index!==0"
                 @click="ChangePostImage(SelectImageIndex-1)"
             />
 
             <button
                 class="change-image change-image-right"
-                v-if="index!==PostImageArray.length-1"
+                v-show="index!==PostImageArray.length-1"
                 @click="ChangePostImage(SelectImageIndex+1)"
             />
 
@@ -146,6 +146,7 @@ export default {
       this.InComponentFavoriteCount = this.FavoriteCount
     }
 
+    console.log(this.PostImageArray)
 
   },
 
@@ -159,7 +160,7 @@ export default {
       this.SelectImageIndex = Index
       this.SelectImageStyle = {
         "transition": "all .4s",
-        "left": (Index * -500).toString() + "px",
+        "left": (Index * -550).toString() + "px",
       }
     },
     SendReply:async function(){
@@ -243,8 +244,8 @@ export default {
 
 
 .post-wrapper {
-  width: 800px;
-  margin-bottom: 25px;
+  width: 900px;
+  margin-bottom: 30px;
   border: solid 1px var(--border-main-color);
   display: flex;
   justify-content: flex-start;
@@ -259,8 +260,8 @@ export default {
 }
 
 .post-image {
-  min-width: 500px;
-  height: 500px;
+  min-width: 550px;
+  height: 550px;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -280,8 +281,8 @@ export default {
 .select-image-wrapper {
   display: flex;
   justify-content: flex-start;
-  width: 500px;
-  height: 500px;
+  width: 550px;
+  height: 550px;
   position: relative;
   left: 0;
 
@@ -290,7 +291,7 @@ export default {
 .select-image-button-wrapper {
   display: flex;
   justify-content: center;
-  width: 500px;
+  width: 550px;
   position: absolute;
   bottom: 10px;
   box-sizing: border-box;
@@ -372,7 +373,7 @@ export default {
 }
 
 .post-status-right-top {
-  width: 300px;
+  width: 350px;
   height: 100%;
   border-top-right-radius: 10px;
   overflow: hidden;

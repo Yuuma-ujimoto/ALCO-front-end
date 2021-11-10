@@ -1,6 +1,11 @@
 <template>
   <div class="cocktail-wrapper">
     <div class="cocktail-form">
+
+      <div class="article-form-top">
+        <h1>記事作成フォーム</h1>
+      </div>
+
       <div class="title-wrapper">
         <input class="post-title" type="text" v-model="title" placeholder="title">
       </div>
