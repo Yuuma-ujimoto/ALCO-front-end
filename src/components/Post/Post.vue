@@ -56,7 +56,7 @@
           </div>
           <div class="post-info-wrapper">
             <div>
-              <img src="@/assets/move-h-a.svg/" alt="・" class="post-info-image">
+              <img src="@/assets/move-h-a.svg/" alt="・" class="post-info-image" @click="OpenPostModal">
             </div>
           </div>
 
@@ -151,6 +151,10 @@ export default {
   },
 
   methods: {
+    OpenPostModal(){
+      console.log("OPEN")
+      this.$store.dispatch("openModal",{ModalId:this.PostData.PostId,ModalType:"Post"})
+    },
     SetPostImageStyle(image) {
       return {
         "background-image": "url(http://localhost:3000/" + image + ")"
@@ -364,7 +368,7 @@ export default {
 }
 
 .post-status-right {
-  width: 300px;
+  width: 350px;
   box-sizing: border-box;
   border-left: solid 1px var(--border-main-color);
   display: flex;
@@ -393,7 +397,6 @@ export default {
 .created-at-and-favorite-area {
   width: 100%;
   height: 10%;
-  max-height: 40px;
   box-sizing: border-box;
   border-bottom: solid 1px var(--border-main-color);
   display: flex;

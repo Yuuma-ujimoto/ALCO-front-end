@@ -4,9 +4,10 @@ import createPersistedState from "vuex-persistedstate";
 export default createStore({
     state: {
         ModalId: "",
+        ModalType: "",
         Token: null,
-        AccountName:null,
-        DisplayName:null
+        AccountName: null,
+        DisplayName: null,
     },
     getters: {
         isLogin: (state) => {
@@ -15,11 +16,20 @@ export default createStore({
         getToken: (state) => {
             return state.Token
         },
-        getAccountName:(state)=>{
+        getAccountName: (state) => {
             return state.AccountName
         },
-        getDisplayName:(state)=>{
+        getDisplayName: (state) => {
             return state.DisplayName
+        },
+        getModalType:(state)=>{
+          return state.ModalType
+        },
+        getModalId:(state)=>{
+          return state.ModalId
+        },
+        isModalOpen: (state) => {
+            return !!state.ModalId && !!state.ModalType
         }
     }
     ,
@@ -34,6 +44,15 @@ export default createStore({
                 state.AccountName = Result.AccountName
                 state.DisplayName = Result.DisplayName
             }
+        },
+        updateModal(state, Result) {
+            if (!Result) {
+                state.ModalId = null
+                state.ModalType = null
+            } else {
+                state.ModalId = Result.ModalId
+                state.ModalType = Result.ModalType
+            }
         }
     },
     actions: {
@@ -42,6 +61,12 @@ export default createStore({
         },
         logout(context) {
             context.commit("updateToken", null)
+        },
+        openModal(context, Result) {
+            context.commit("updateModal", Result)
+        },
+        closeModal(context) {
+            context.commit("updateModal")
         }
     },
     modules: {},

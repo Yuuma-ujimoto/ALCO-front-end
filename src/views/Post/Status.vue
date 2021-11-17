@@ -1,5 +1,5 @@
 <template>
-  <div v-if="AxiosEnd">
+  <div class="timeline-wrapper" v-if="AxiosEnd">
     <Post
         :PostData="PostStatusResult"
         :PostImageArray="PostImageResult"
@@ -52,5 +52,11 @@ export default {
 </script>
 
 <style scoped>
+  .timeline-wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 50px;
 
+  }
 </style>

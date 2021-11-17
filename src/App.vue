@@ -1,11 +1,10 @@
 <template>
+  <global-modal/>
   <global-header/>
   <div id="main">
       <router-view/>
-
-    <global-modal/>
-    <global-toast-alert/>
   </div>
+  <global-toast-alert/>
 </template>
 <script>
 import globalModal from "./components/globalModal";

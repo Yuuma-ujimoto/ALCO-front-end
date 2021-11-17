@@ -61,7 +61,11 @@
 
 
           <div class="add-tag-wrapper">
+            <input type="text">
+            <button>Add</button>
+            <div class="added-tag-area">
 
+            </div>
           </div>
 
         </div>
@@ -71,6 +75,11 @@
       </div>
     </div>
   </div>
+
+  <datalist id="tags">
+    <option v-for="tag in tagArray" :key="tag">{{ tag }}</option>
+  </datalist>
+
 </template>
 
 <script>
@@ -85,8 +94,11 @@ export default {
       postText: "",
       postImageFileArray: [],
       postImageURLArray: [],
-      selectMainImageIndex: 0
+      selectMainImageIndex: 0,
+      tagArray: []
     }
+  },
+  mounted() {
   },
   computed: {
     MainImageStyle: function () {
@@ -108,6 +120,18 @@ export default {
     }
   },
   methods: {
+    getTag: async function () {
+      const url = BaseUrl + "/post/getTagArray"
+      const Token = this.$store.getters.getToken
+      const Params = {
+        headers: {
+          token: Token
+        }
+      }
+      const result = await axios.get(url, Params)
+      console.log(result)
+      this.tagArray = result.data.TagArray
+    },
     changeMainImageIndex: function (index) {
       this.selectMainImageIndex = index
     },
@@ -141,11 +165,11 @@ export default {
       PostParams.append("PostText", this.postText)
       const Token = await this.$store.getters.getToken
       const axiosConfig = {
-        headers:{
+        headers: {
           Token: Token
         }
       }
-      const result = await axios.post(url,PostParams,axiosConfig)
+      const result = await axios.post(url, PostParams, axiosConfig)
       console.log(result)
     }
   }
