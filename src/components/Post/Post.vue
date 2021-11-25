@@ -64,8 +64,10 @@
         <div class="post-caption-area">
           <p class="post-caption">{{ PostData.PostText }}</p>
         </div>
-        <div class="created-at-and-favorite-area">
+        <div class="tag-area">
 
+        </div>
+        <div class="created-at-and-favorite-area">
           <div class="created-at-area">
             <p class="created-at-text">{{ PostData.CreatedAt.slice(0, 9) }}・{{ PostData.CreatedAt.slice(11, 19) }}</p>
 
@@ -394,6 +396,16 @@ export default {
   border-bottom: solid 1px var(--border-main-color);
 }
 
+.tag-area{
+  width: 100%;
+  height: 10%;
+  box-sizing: border-box;
+  border-bottom: solid 1px var(--border-main-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .created-at-and-favorite-area {
   width: 100%;
   height: 10%;
@@ -489,7 +501,7 @@ export default {
 
 
 .reply-area {
-  height: 45%;
+  height: 35%;
   border-bottom: solid 1px var(--border-main-color);
   box-sizing: border-box;
   overflow-y: auto;

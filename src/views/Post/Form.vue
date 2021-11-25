@@ -61,10 +61,19 @@
 
 
           <div class="add-tag-wrapper">
-            <input type="text">
-            <button>Add</button>
-            <div class="added-tag-area">
-
+            <input type="text" class="add-tag-input" placeholder="tag name" v-model="tagName" list="tags">
+            <button class="add-tag-button" @click="addTag">Add</button>
+          </div>
+          <div class="added-tag-area">
+            <div v-for="(tag,index) in addTagArray" :key="index" class="added-tag-wrapper">
+              <div class="tag-name">
+                <p>{{tag}}</p>
+              </div>
+              <div class="tag-delete-button-wrapper">
+                <div class="delete-button" @click="deleteTag(index)">
+                  <img src="../../assets/close-a.svg" alt="">
+                </div>
+              </div>
             </div>
           </div>
 
@@ -77,6 +86,7 @@
   </div>
 
   <datalist id="tags">
+    <option>ビール</option>
     <option v-for="tag in tagArray" :key="tag">{{ tag }}</option>
   </datalist>
 
@@ -95,7 +105,9 @@ export default {
       postImageFileArray: [],
       postImageURLArray: [],
       selectMainImageIndex: 0,
-      tagArray: []
+      tagArray: [],
+      tagName:null,
+      addTagArray:[]
     }
   },
   mounted() {
@@ -150,6 +162,18 @@ export default {
       this.postImageURLArray.splice(this.selectMainImageIndex, 1)
       this.selectMainImageIndex = 0
     },
+    addTag:function () {
+      if (this.addTagArray.indexOf(this.tagName)!==-1){
+        console.log("重複")
+        return
+      }
+      this.addTagArray.push(this.tagName)
+      this.tagName = null
+    },
+    deleteTag:function (index) {
+      console.log(index)
+      this.addTagArray.splice(index,1)
+    },
     submit: async function () {
       if (!this.postText.length) {
         // MEMO:後でアラート処理実装
@@ -180,6 +204,8 @@ export default {
 .post-form-wrapper {
   display: flex;
   justify-content: center;
+  margin: 150px 0;
+
 }
 
 .post-form {
@@ -361,7 +387,48 @@ export default {
 
 .add-tag-wrapper {
   width: 100%;
-  height: 100px;
+  height: 60px;
+  display: flex;
+  padding:10px;
+  box-sizing: border-box;
+}
+
+.add-tag-input{
+  width: 75%;
+  height: 100%;
+  outline: none;
+  box-sizing: border-box;
+  padding: 2px 2px 2px 4px;
+  border: solid 1px var(--border-main-color);
+}
+.add-tag-button{
+  width: 25%;
+  height: 100%;
+  outline: none;
+  box-sizing: border-box;
+  border: solid 1px var(--border-main-color);
+}
+
+.added-tag-area{
+  padding:10px;
+}
+
+.added-tag-wrapper{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 32px;
+  padding-top: 2px;
+  box-sizing: border-box;
+}
+
+.tag-name{
+  height: 24px;
+}
+.delete-button{
+  width: 24px;
+  height: 24px;
 }
 
 .post-form-left-bottom {
