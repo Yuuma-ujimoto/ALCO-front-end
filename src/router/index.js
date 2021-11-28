@@ -9,7 +9,7 @@ import ArticleFrom from "../views/Article/Form"
 import Index from "../views/Index"
 import Notice from "../views/Notice";
 import Status from "../views/Post/Status";
-
+import PostSearch from "../views/Post/Search";
 const routes = [
     {
         path: "/",
@@ -53,6 +53,17 @@ const routes = [
         component: PostUser,
         name: "post user",
         meta: {requiresAuth: true}
+    },
+    {
+        path: "/post/search",
+        component: PostSearch,
+        name:"post search top"
+    },
+    {
+        path: "/post/search/:QueryText",
+        component: PostSearch,
+        name:"post search query",
+        meta:{requiresAuth: true}
     },
     {
         path: "/article/form",
