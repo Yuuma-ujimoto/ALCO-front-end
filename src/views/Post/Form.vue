@@ -31,7 +31,8 @@
 
           <div class="add-image-box">
             <label for="add-image-input" class="add-image-label">
-              <img class="add-image-icon" src="../../assets/plus-a.svg" alt="a">
+              <img class="add-image-icon" src="../../assets/plus-a.svg" alt="a" >
+
             </label>
             <input class="add-image-input" id="add-image-input" type="file" ref="addFile" @change="addFile">
           </div>
@@ -132,6 +133,9 @@ export default {
     }
   },
   methods: {
+    test(){
+      console.log("a")
+    },
     getTag: async function () {
       const url = BaseUrl + "/post/getTagArray"
       const Token = this.$store.getters.getToken
@@ -148,6 +152,7 @@ export default {
       this.selectMainImageIndex = index
     },
     addFile: function () {
+      console.log("add")
       const File = this.$refs.addFile.files[0]
       this.postImageURLArray.push(URL.createObjectURL(File))
       this.postImageFileArray.push(File)
@@ -183,6 +188,11 @@ export default {
       }
       const url = BaseUrl + "/post/"
       const PostParams = new FormData()
+
+      for(let PostTag of this.addTagArray){
+        PostParams.append("Tag",PostTag)
+      }
+
       for (let PostImageFile of this.postImageFileArray) {
         PostParams.append("PostImage", PostImageFile)
       }

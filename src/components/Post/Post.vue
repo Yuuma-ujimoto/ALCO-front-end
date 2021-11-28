@@ -15,14 +15,11 @@
                 v-show="index!==0"
                 @click="ChangePostImage(SelectImageIndex-1)"
             />
-
             <button
                 class="change-image change-image-right"
                 v-show="index!==PostImageArray.length-1"
                 @click="ChangePostImage(SelectImageIndex+1)"
             />
-
-
           </div>
         </div>
         <div class="select-image-button-wrapper">
@@ -33,8 +30,6 @@
               @click="ChangePostImage(index)"
               :class="{'activeButton':index===SelectImageIndex}"
           />
-
-
         </div>
       </div>
     </div>
@@ -50,7 +45,8 @@
             </div>
             <div class="user-name-wrapper">
               <p class="user-display-name">{{ PostData.DisplayName }}</p>
-              <router-link :to="'/post/user/'+PostData.AccountName" class="user-account-name">@{{ PostData.AccountName }}
+              <router-link :to="'/post/user/'+PostData.AccountName" class="user-account-name">
+                @{{ PostData.AccountName }}
               </router-link>
             </div>
           </div>
@@ -73,8 +69,10 @@
 
           </div>
           <div class="favorite-area">
-            <div  @click="SendFavorite"><FavoriteHeart :Fav="InComponentFavoriteBool" /></div>
-            <p>{{InComponentFavoriteCount}}</p>
+            <div @click="SendFavorite">
+              <FavoriteHeart :Fav="InComponentFavoriteBool"/>
+            </div>
+            <p>{{ InComponentFavoriteCount }}</p>
           </div>
         </div>
         <div class="reply-area">
@@ -94,7 +92,7 @@
       </div>
 
       <div class="reply-send-form-area">
-        <textarea class="reply-input" placeholder="コメント" v-model="ReplyText"  maxlength="200"></textarea>
+        <textarea class="reply-input" placeholder="コメント" v-model="ReplyText" maxlength="200"></textarea>
         <button type="button" class="reply-submit-button" @click="SendReply"> 投稿</button>
       </div>
     </div>
@@ -121,30 +119,30 @@ export default {
     },
     ReplyArray: {
       type: [Array],
-      default:()=>[]
+      default: () => []
     },
     FavoriteCount: {
       type: Number
     },
-    MyFavoriteBool:{
-      type:Boolean
+    MyFavoriteBool: {
+      type: Boolean
     }
   },
   data() {
     return {
       SelectImageIndex: null,
-      SelectImageStyle:{},
-      ReplyText:"",
-      InComponentReplyArray:[],//コンポーネント内で使用する返信データ
-      InComponentFavoriteBool:false,//コンポーネント内で使用するFAV情報
-      InComponentFavoriteCount:0
+      SelectImageStyle: {},
+      ReplyText: "",
+      InComponentReplyArray: [],//コンポーネント内で使用する返信データ
+      InComponentFavoriteBool: false,//コンポーネント内で使用するFAV情報
+      InComponentFavoriteCount: 0
     }
   },
   mounted() {
     this.SelectImageIndex = 0
     this.InComponentReplyArray = this.ReplyArray
     this.InComponentFavoriteBool = this.MyFavoriteBool
-    if (this.FavoriteCount){
+    if (this.FavoriteCount) {
       this.InComponentFavoriteCount = this.FavoriteCount
     }
 
@@ -153,49 +151,49 @@ export default {
   },
 
   methods: {
-    OpenPostModal(){
+    OpenPostModal() {
       console.log("OPEN")
-      this.$store.dispatch("openModal",{ModalId:this.PostData.PostId,ModalType:"Post"})
+      this.$store.dispatch("openModal", {ModalId: this.PostData.PostId, ModalType: "Post"})
     },
     SetPostImageStyle(image) {
       return {
         "background-image": "url(http://localhost:3000/" + image + ")"
       }
     },
-    ChangePostImage(Index){
+    ChangePostImage(Index) {
       this.SelectImageIndex = Index
       this.SelectImageStyle = {
         "transition": "all .4s",
         "left": (Index * -550).toString() + "px",
       }
     },
-    SendReply:async function(){
-      if (!this.ReplyText.length){
+    SendReply: async function () {
+      if (!this.ReplyText.length) {
         //後でアラート処理
         return
       }
-      const url = BaseUrl+"/post/reply"
+      const url = BaseUrl + "/post/reply"
       const PostParams = new URLSearchParams()
-      PostParams.append("ReplyText",this.ReplyText)
-      PostParams.append("PostId",this.PostData.PostId)
+      PostParams.append("ReplyText", this.ReplyText)
+      PostParams.append("PostId", this.PostData.PostId)
       const Token = await this.$store.getters.getToken
       const config = {
-        headers:{
-          token:Token
+        headers: {
+          token: Token
         }
       }
-      const result = await axios.post(url,PostParams,config)
+      const result = await axios.post(url, PostParams, config)
       console.log(result)
       // ここで内部変数に返信内容を渡してDataの方の変数を消去
       const ReplyText = this.ReplyText
       this.ReplyText = ""
 
-      if (result.data.ServerError){
+      if (result.data.ServerError) {
 
         // Alert: Type Error Message result.data.Message
         return
       }
-      if (result.data.ClientError){
+      if (result.data.ClientError) {
         // Alert: Type Warning Message result.data.Message
         return
       }
@@ -204,40 +202,38 @@ export default {
       this.InComponentReplyArray.push({
         DisplayName: DisplayName,
         AccountName: AccountName,
-        PostReplyText:ReplyText
+        PostReplyText: ReplyText
       })
 
     },
-    SendFavorite:async function(){
+    SendFavorite: async function () {
       const url = BaseUrl + "/post/favorite"
       const PostParams = new URLSearchParams()
-      PostParams.append("PostId",this.PostData.PostId)
+      PostParams.append("PostId", this.PostData.PostId)
       const token = await this.$store.getters.getToken
       const config = {
         headers: {
-          token:token
+          token: token
         }
       }
-      const result = await axios.post(url,PostParams,config)
+      const result = await axios.post(url, PostParams, config)
       console.log(result)
-      if (result.data.ServerError){
+      if (result.data.ServerError) {
         // Alert: type Error
         return
       }
-      if (result.data.ClientError){
+      if (result.data.ClientError) {
         // Alert : type Warning
         return
       }
 
-      if (result.data.Type==="Insert"){
+      if (result.data.Type === "Insert") {
         this.InComponentFavoriteCount++
         this.InComponentFavoriteBool = true
-      }
-      else if(result.data.Type==="Delete") {
+      } else if (result.data.Type === "Delete") {
         this.InComponentFavoriteCount--
         this.InComponentFavoriteBool = false
-      }
-      else{
+      } else {
         // Alert:本来あり得ない処理だから追加しなくていいかもしれない
         return
       }
@@ -273,7 +269,6 @@ export default {
   background-position: center center;
   overflow: hidden;
   box-sizing: border-box;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -291,7 +286,6 @@ export default {
   height: 550px;
   position: relative;
   left: 0;
-
 }
 
 .select-image-button-wrapper {
@@ -307,7 +301,6 @@ export default {
   border-radius: 100%;
   height: 18px;
   width: 18px;
-  /*background: var(--background-main-color);*/
   margin: 5px;
   background: #7f8c8d;
 }
@@ -318,7 +311,6 @@ export default {
 
 
 .post-image-preview {
-  /*width: 75%;*/
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -338,7 +330,6 @@ export default {
   opacity: 0.8;
   font-size: 20px;
   position: relative;
-
 }
 
 .change-image-left:after {
@@ -396,7 +387,7 @@ export default {
   border-bottom: solid 1px var(--border-main-color);
 }
 
-.tag-area{
+.tag-area {
   width: 100%;
   height: 10%;
   box-sizing: border-box;

@@ -1,73 +1,93 @@
 <template>
-  <header>
-    <div class="main-header-wrapper">
-      <div class="header-left-area">
-        <router-link to="/">
-          <img src="../assets/Logo.png" style="width: 150px;" alt="Alco">
-        </router-link>
+  <div class="header-and-info-wrapper">
+    <header style="width: 100%">
+      <div class="main-header-wrapper">
+        <div class="header-left-area">
+          <router-link to="/">
+            <img src="../assets/Logo.png" style="width: 150px;" alt="Alco">
+          </router-link>
+        </div>
+
+        <div class="header-right-area">
+          <div class="link-area">
+
+            <div class="link-wrapper">
+              <div class="main-link">
+                <img src="../assets/cocktail.svg" alt="" class="icon">
+                <router-link to="/post/timeline" class="header-link">Post</router-link>
+              </div>
+              <div class="sub-link">
+                <img src="../assets/edit_black_24dp.svg" alt="" class="icon">
+                <router-link to="/post/form" class="header-link">Form</router-link>
+              </div>
+              <div class="sub-link">
+                <img src="../assets/search.svg" alt="" class="icon">
+                <router-link to="/post//search" class="header-link">Search</router-link>
+              </div>
+            </div>
+
+            <div class="link-wrapper">
+              <div class="main-link">
+                <img src="../assets/article_black_24dp.svg" alt="" class="icon">
+                <router-link to="/article/all" class="header-link">Article</router-link>
+              </div>
+              <div class="sub-link">
+                <img src="../assets/edit_black_24dp.svg" alt="" class="icon">
+                <router-link to="/article/form" class="header-link">Form</router-link>
+              </div>
+              <div class="sub-link">
+                <img src="../assets/search.svg" alt="" class="icon">
+                <router-link to="/article/search" class="header-link">Search</router-link>
+              </div>
+            </div>
+
+
+          </div>
+          <div class="user-area no-login" v-show="!this.$store.getters.isLogin">
+            <div class="user-area-link sign-up-area">
+              <router-link to="/SignUp" class="user-link">SignUp</router-link>
+            </div>
+            <div class="user-area-link sign-in-area">
+              <router-link to="/SignIn" class="user-link">SignIn</router-link>
+            </div>
+          </div>
+          <div class="user-area login" v-show="this.$store.getters.isLogin">
+            <div class="user-area-link my-page-area">
+              <router-link to="/MyPage" class="user-link">MyPage</router-link>
+            </div>
+            <div class="notice user-area-link">
+              <img src="../assets/bell-alt.svg" class="icon" alt="">
+              <p>{{ NoticeCount }}</p>
+            </div>
+
+            <div class="info user-area-link">
+              <img src="../assets/move-h-a.svg" class="icon" alt="" @click="isInfoOpen = true" v-show="!isInfoOpen">
+              <img src="../assets/close-a.svg" class="icon" alt="" @click="isInfoOpen = false" v-show="isInfoOpen">
+
+            </div>
+
+          </div>
+
+        </div>
       </div>
+    </header>
 
-      <div class="header-right-area">
-        <div class="link-area">
-
-          <div class="link-wrapper">
-            <div class="main-link">
-              <img src="../assets/cocktail.svg" alt="" class="icon">
-              <router-link to="/post/timeline" class="header-link">Post</router-link>
-            </div>
-            <div class="sub-link">
-              <img src="../assets/edit_black_24dp.svg" alt="" class="icon">
-              <router-link to="/post/form" class="header-link">Form</router-link>
-            </div>
-          </div>
-
-          <div class="link-wrapper">
-            <div class="main-link">
-              <img src="../assets/article_black_24dp.svg" alt="" class="icon">
-              <router-link to="/article/all" class="header-link">Article</router-link>
-            </div>
-            <div class="sub-link">
-              <img src="../assets/edit_black_24dp.svg" alt="" class="icon">
-              <router-link to="/article/form" class="header-link">Form</router-link>
-            </div>
-            <div class="sub-link">
-              <img src="../assets/search.svg" alt="" class="icon">
-              <router-link to="/article/search" class="header-link">Search</router-link>
-            </div>
-          </div>
-
-
-        </div>
-        <div class="user-area no-login" v-show="!this.$store.getters.isLogin">
-          <div class="user-area-link sign-up-area">
-            <router-link to="/SignUp" class="user-link">Sign Up</router-link>
-          </div>
-          <div class="user-area-link sign-in-area">
-            <router-link to="/SignIn" class="user-link">Sign In</router-link>
-          </div>
-        </div>
-        <div class="user-area login" v-show="this.$store.getters.isLogin">
-          <div class="user-area-link my-page-area">
-            <router-link to="/MyPage" class="user-link">My Page</router-link>
-          </div>
-          <div class="notice user-area-link">
-            <img src="../assets/bell-alt.svg" class="icon" alt="">
-            <p>{{ NoticeCount }}</p>
-          </div>
-
-          <div class="info user-area-link">
-            <img src="../assets/move-h-a.svg" class="icon" alt="" @click="isInfoOpen = true">
-
-          </div>
-
-        </div>
-
+    <div class="info-menu" v-show="isInfoOpen">
+      <div class="info-column">
+        <p>Post管理</p>
       </div>
-    </div>
-  </header>
-  <div class="info-wrapper" v-show="isInfoOpen">
-    <div class="info-menu">
-      <p>ログアウト</p>
+      <div class="info-column">
+        <p>Article管理</p>
+      </div>
+      <div class="info-column">
+        <p>ユーザー情報確認</p>
+      </div>
+      <div class="info-column">
+        <p>お問い合せ</p>
+      </div>
+      <div class="info-column">
+        <p>ログアウト</p>
+      </div>
     </div>
   </div>
 </template>
@@ -87,6 +107,7 @@ export default {
   watch: {
     $route: async function () {
       console.log("router change")
+      this.isInfoOpen = false
       if (this.$store.getters.isLogin) {
         const NoticeCountURL = BaseUrl + "/notice/count"
         const token = await this.$store.getters.getToken
@@ -105,6 +126,12 @@ export default {
 </script>
 
 <style scoped>
+
+.header-and-info-wrapper{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
 
 .icon {
   width: 20px;
@@ -231,6 +258,7 @@ export default {
 
 
 .info-wrapper {
+  top: 70px;
   width: 100%;
   position: fixed;
   display: flex;
@@ -238,8 +266,21 @@ export default {
   z-index: 10000;
 }
 
-.info-menu{
+.info-menu {
   width: 25%;
+  position: fixed;
+  top: 70px;
+}
+
+.info-column {
+  background: white;
+  padding: 10px;
+  border: solid 1px var(--border-main-color);
+  border-top: none;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  height: 50px;
 }
 
 </style>
