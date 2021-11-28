@@ -22,7 +22,7 @@
               </div>
               <div class="sub-link">
                 <img src="../assets/search.svg" alt="" class="icon">
-                <router-link to="/post//search" class="header-link">Search</router-link>
+                <router-link to="/post/search" class="header-link">Search</router-link>
               </div>
             </div>
 
@@ -193,7 +193,7 @@ export default {
 .sub-link {
   display: flex;
   width: 200px;
-  height: 70px;
+  height: 0;
   justify-content: flex-start;
   align-items: center;
   background: #fff;
@@ -212,9 +212,10 @@ export default {
 }
 
 .link-wrapper:hover > .sub-link {
-  transition: .4s;
+  transition: .3s;
   opacity: 1;
   position: relative;
+  height: 70px;
   top: 0;
 
 }
