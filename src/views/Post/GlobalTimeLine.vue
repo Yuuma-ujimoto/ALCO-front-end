@@ -1,13 +1,6 @@
 <template>
   <div class="timeline-wrapper">
-    <Post
-        v-for="(PostData) of PostResult" :key="PostData.PostId"
-        :PostData="PostData"
-        :PostImageArray="PostImageResult[PostData.PostId]"
-        :ReplyArray="ReplyResult[PostData.PostId]"
-        :FavoriteCount="FavoriteResult[PostData.PostId]"
-        :MyFavoriteBool="MyFavoriteResult.indexOf(PostData.PostId)!==-1"
-    ></Post>
+    <Post v-for="(result,index) in PostResult" :key="index" :PostData="result"/>
   </div>
 </template>
 
@@ -18,20 +11,16 @@ import Post from "../../components/Post/Post";
 
 export default {
   name: "TimeLine",
-
   components: {
     Post
   },
   data() {
     return {
-      PostResult: [],
-      PostImageResult: [],
-      ReplyResult: [],
-      FavoriteResult: [],
-      MyFavoriteResult:[]
+      PostResult: []
     }
   },
-  mounted() {
+  // DOMが生成される前に読み込んで反映
+  created() {
     this.getGlobalTimeline()
   },
   methods: {
@@ -44,12 +33,9 @@ export default {
         }
       }
       const result = await axios.get(url, config)
-      console.log(result)
-      this.PostResult = result.data.PostResult
-      this.PostImageResult = result.data.PostImageResult
-      this.ReplyResult = result.data.ReplyResult
-      this.FavoriteResult = result.data.FavoriteResult
-      this.MyFavoriteResult = result.data.MyFavoriteResult
+      const ResultData = result.data
+      console.log(ResultData)
+      this.PostResult = ResultData.ResultArray
     }
   }
 }

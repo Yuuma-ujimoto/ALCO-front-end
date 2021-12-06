@@ -1,17 +1,13 @@
 <template>
   <div class="timeline-wrapper">
-    <form action="/post/search" >
-      <input type="text" >
-      <button></button>
-    </form>
-    <Post
-        v-for="(PostData) of PostResult" :key="PostData.PostId"
-        :PostData="PostData"
-        :PostImageArray="PostImageResult[PostData.PostId]"
-        :ReplyArray="ReplyResult[PostData.PostId]"
-        :FavoriteCount="FavoriteResult[PostData.PostId]"
-        :MyFavoriteBool="MyFavoriteResult.indexOf(PostData.PostId)!==-1"
-    ></Post>
+    <div class="search-area">
+      <input type="text" class="search-input" placeholder="search word" v-model="QueryText">
+      <button class="search-button" @click="searchText">検索</button>
+    </div>
+
+    <Post v-for="(result,index) in PostResult" :key="index" :PostData="result"/>
+
+
   </div>
 </template>
 
@@ -32,15 +28,46 @@ export default {
       PostImageResult: [],
       ReplyResult: [],
       FavoriteResult: [],
-      MyFavoriteResult:[]
+      MyFavoriteResult: [],
+      QueryText: null
     }
   },
-  mounted() {
-    this.getGlobalTimeline()
+  watch: {
+    $route() {
+      console.log("search")
+    }
   },
+  created() {
+    console.log("created")
+  },
+  mounted() {
+    //this.getGlobalTimeline()
+    console.log("mounted")
+    window.onload= ()=>{
+      console.log("load")
+      this.checkQuery()
+
+    }
+  },
+
   methods: {
-    getGlobalTimeline: async function () {
-      const url = BaseUrl + "/timeline/query?QueryText="+this.$route.params.QueryText
+    checkQuery(){
+      console.log(this.$route.params.QueryText)
+      if (!this.$route.params.QueryText) {
+        return
+      }
+      this.getQueryPosts()
+
+    },
+    searchText() {
+      if (!this.QueryText) {
+        //alert:警告処理
+        return
+      }
+      this.$router.push("/post/search/" + this.QueryText)
+    },
+    getQueryPosts: async function () {
+      const url = BaseUrl + "/timeline/query?QueryText=" + this.$route.params.QueryText
       const token = await this.$store.getters.getToken
       const config = {
         headers: {
@@ -48,12 +75,9 @@ export default {
         }
       }
       const result = await axios.get(url, config)
+      console.log("****************")
       console.log(result)
-      this.PostResult = result.data.PostResult
-      this.PostImageResult = result.data.PostImageResult
-      this.ReplyResult = result.data.ReplyResult
-      this.FavoriteResult = result.data.FavoriteResult
-      this.MyFavoriteResult = result.data.MyFavoriteResult
+      this.PostResult = result.data.ResultArray
     }
   }
 }
@@ -66,4 +90,37 @@ export default {
   align-items: center;
   padding-top: 50px;
 }
+
+.icon {
+  width: 48px;
+}
+
+.search-area {
+  display: flex;
+  width: 50%;
+}
+
+.search-input {
+  width: 75%;
+  height: 50px;
+  margin: 0;
+  padding-left: 10px;
+  outline: none;
+  box-sizing: border-box;
+  border: solid 1px black;
+  font-size: 24px;
+}
+
+.search-button {
+  height: 50px;
+  width: 25%;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  box-sizing: border-box;
+  border: solid 1px black;
+
+}
+
+
 </style>

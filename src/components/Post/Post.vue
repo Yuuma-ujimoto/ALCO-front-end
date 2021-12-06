@@ -1,10 +1,10 @@
 <template>
   <div class="post-wrapper">
-    <div class="post-status-left" v-on:keydown.right="console.log('a')">
+    <div class="post-status-left">
       <div class="post-image-preview">
         <div class="select-image-wrapper" :style="SelectImageStyle">
           <div
-              v-for="(image,index) in PostImageArray"
+              v-for="(image,index) in PostData.PostImageResult"
               :key="index"
               class="post-image"
               :class="{'first-img':index===0}"
@@ -17,14 +17,14 @@
             />
             <button
                 class="change-image change-image-right"
-                v-show="index!==PostImageArray.length-1"
+                v-show="index!==PostData.PostImageResult.length-1"
                 @click="ChangePostImage(SelectImageIndex+1)"
             />
           </div>
         </div>
         <div class="select-image-button-wrapper">
           <div
-              v-for="(image,index) in PostImageArray"
+              v-for="(image,index) in PostData.PostImageResult"
               :key="index"
               class="select-image-button"
               @click="ChangePostImage(index)"
@@ -57,12 +57,11 @@
           </div>
 
         </div>
-        <div class="post-caption-area">
-          <p class="post-caption">{{ PostData.PostText }}</p>
-        </div>
-        <div class="tag-area">
 
-        </div>
+
+        <CaptionAndTag :PostCaption="PostData.PostText" :TagArray="PostData.Tag"/>
+
+
         <div class="created-at-and-favorite-area">
           <div class="created-at-area">
             <p class="created-at-text">{{ PostData.CreatedAt.slice(0, 9) }}・{{ PostData.CreatedAt.slice(11, 19) }}</p>
@@ -72,7 +71,7 @@
             <div @click="SendFavorite">
               <FavoriteHeart :Fav="InComponentFavoriteBool"/>
             </div>
-            <p>{{ InComponentFavoriteCount }}</p>
+            <p>{{ !InComponentFavoriteCount ? 0 : InComponentFavoriteCount }}</p>
           </div>
         </div>
         <div class="reply-area">
@@ -103,29 +102,19 @@
 <script>
 import FavoriteHeart from "./FavoriteHeart";
 import {BaseUrl} from "../../assets/BaseUrl";
+import CaptionAndTag from "./CaptionAndTag";
 import axios from "axios";
+
 
 export default {
   name: "PostStatus",
   components: {
     FavoriteHeart,
+    CaptionAndTag
   },
   props: {
     PostData: {
       type: Object
-    },
-    PostImageArray: {
-      type: Array
-    },
-    ReplyArray: {
-      type: [Array],
-      default: () => []
-    },
-    FavoriteCount: {
-      type: Number
-    },
-    MyFavoriteBool: {
-      type: Boolean
     }
   },
   data() {
@@ -138,16 +127,10 @@ export default {
       InComponentFavoriteCount: 0
     }
   },
-  mounted() {
-    this.SelectImageIndex = 0
-    this.InComponentReplyArray = this.ReplyArray
-    this.InComponentFavoriteBool = this.MyFavoriteBool
-    if (this.FavoriteCount) {
-      this.InComponentFavoriteCount = this.FavoriteCount
-    }
-
-    console.log(this.PostImageArray)
-
+  created() {
+    console.log(this.PostData)
+    this.InComponentFavoriteCount = this.PostData.FavCount
+    this.InComponentReplyArray = this.PostData.ReplyResult
   },
 
   methods: {
@@ -247,7 +230,7 @@ export default {
 
 .post-wrapper {
   width: 900px;
-  margin-bottom: 30px;
+  margin-bottom: 50px;
   border: solid 1px var(--border-main-color);
   display: flex;
   justify-content: flex-start;
@@ -376,26 +359,6 @@ export default {
   overflow: hidden;
 }
 
-.post-caption-area {
-  width: 100%;
-  height: 25%;
-  max-height: 200px;
-  background: var(--background-main-color);
-  overflow-y: auto;
-  padding: 10px;
-  box-sizing: border-box;
-  border-bottom: solid 1px var(--border-main-color);
-}
-
-.tag-area {
-  width: 100%;
-  height: 10%;
-  box-sizing: border-box;
-  border-bottom: solid 1px var(--border-main-color);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
 
 .created-at-and-favorite-area {
   width: 100%;
@@ -408,11 +371,11 @@ export default {
 }
 
 .created-at-area {
-  width: 70%;
+  width: 75%;
 }
 
 .favorite-area {
-  width: 30%;
+  width: 25%;
   display: flex;
   align-items: center;
 }
@@ -423,10 +386,6 @@ export default {
   color: var(--text-sub-color);
 }
 
-.post-caption {
-  white-space: break-spaces;
-  margin: 0;
-}
 
 .user-status-area {
   margin-top: 10px;
@@ -449,7 +408,8 @@ export default {
 .post-info-wrapper {
   display: flex;
   align-items: center;
-  margin-right: 15px;
+  width: 25%;
+  justify-content: center;
 }
 
 .post-info-image {
