@@ -115,14 +115,9 @@ export default {
   },
   computed: {
     MainImageStyle: function () {
-      if (!this.selectImageStyleArray) {
-        return null
-      }
-      return this.selectImageStyleArray[this.selectMainImageIndex]
-
+      return !this.selectImageStyleArray ? null : this.selectImageStyleArray[this.selectMainImageIndex];
     },
     selectImageStyleArray: function () {
-      console.log("a")
       let StyleArray = []
       for (let postImageURL of this.postImageURLArray) {
         StyleArray.push({
@@ -133,9 +128,6 @@ export default {
     }
   },
   methods: {
-    test(){
-      console.log("a")
-    },
     getTag: async function () {
       const url = BaseUrl + "/post/getTagArray"
       const Token = this.$store.getters.getToken
@@ -152,7 +144,6 @@ export default {
       this.selectMainImageIndex = index
     },
     addFile: function () {
-      console.log("add")
       const File = this.$refs.addFile.files[0]
       this.postImageURLArray.push(URL.createObjectURL(File))
       this.postImageFileArray.push(File)
@@ -205,6 +196,11 @@ export default {
       }
       const result = await axios.post(url, PostParams, axiosConfig)
       console.log(result)
+      if (result.data.ServerError||result.data.ClientError){
+        this.$store.dispatch("")
+        return
+      }
+      await this.$router.push("/post/timeline")
     }
   }
 }

@@ -71,7 +71,7 @@
             <div @click="SendFavorite">
               <FavoriteHeart :Fav="InComponentFavoriteBool"/>
             </div>
-            <p>{{ !InComponentFavoriteCount ? 0 : InComponentFavoriteCount }}</p>
+            <p>{{InComponentFavoriteCount }}</p>
           </div>
         </div>
         <div class="reply-area">
@@ -129,8 +129,11 @@ export default {
   },
   created() {
     console.log(this.PostData)
-    this.InComponentFavoriteCount = this.PostData.FavCount
+
+    this.InComponentFavoriteCount = !this.PostData.FavCount ? 0 : this.PostData.FavCount
+
     this.InComponentReplyArray = this.PostData.ReplyResult
+    this.InComponentFavoriteBool = this.PostData.isMyFavorite
   },
 
   methods: {
