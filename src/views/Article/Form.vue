@@ -27,15 +27,17 @@
         </label>
 
       </div>
-      <div v-if="mode==='write'" class="post-contents-wrapper">
-        <textarea class="post-contents" v-model="content" placeholder="書き込みエリア"></textarea>
+<!--      <button @click="test">test</button>-->
+
+      <div v-show="mode==='write'" class="post-contents-wrapper">
+        <textarea class="post-contents" ref="write1" v-model="content" placeholder="書き込みエリア"></textarea>
 
       </div>
-      <div v-else-if="mode==='preview'" class="post-contents-wrapper">
+      <div v-show="mode==='preview'" class="post-contents-wrapper">
         <Markdown class="post-preview" :source="content" :language="'ja'"/>
       </div>
-      <div v-else class="hybrid-wrapper">
-        <textarea class="hybrid-contents" v-model="content" placeholder="書き込みエリア"></textarea>
+      <div v-show="mode==='hybrid'" class="hybrid-wrapper">
+        <textarea class="hybrid-contents" ref="write2" v-model="content" placeholder="書き込みエリア"></textarea>
         <Markdown class="hybrid-preview" :source="content" :language="'ja'"/>
 
       </div>
@@ -49,6 +51,8 @@
 <script>
 
 import Markdown from 'vue3-markdown-it';
+import axios from "axios";
+import {BaseUrl} from "../../assets/BaseUrl";
 
 export default {
   name: "CocktailForm",
@@ -60,12 +64,56 @@ export default {
       content: '',
       mode: "hybrid"
     }
+  },
+  methods: {
+    test: function () {
+      console.log("")
+
+      //console.log(this.$refs.write2.selectionStart)
+    },
+    AddImage: async () => {
+      //![](url)
+
+      const url = BaseUrl + "/article/upload-image"
+
+      const File = this.$refs.addFile.files[0]
+
+      const PostParams = new FormData()
+      PostParams.append("image", File)
+      const Token = await this.$store.getters.getToken
+      const axiosConfig = {
+        headers: {
+          Token: Token
+        }
+      }
+      const result = await axios.post(url, PostParams, axiosConfig)
+      console.log(result)
+      const selectionStart =
+          this.mode === "write"  ? this.$refs.write1.selectionStart :
+          this.mode === "hybrid" ? this.$refs.write2.selectionStart : -1
+      if (selectionStart<0){
+        return
+      }
+      const content = this.content
+      const BeforeContent = content.slice(0,selectionStart)
+      const AfterContent = content.slice(selectionStart)
+      const InsertString = `![](${result.data.FileURL})`
+      this.content = BeforeContent + InsertString + AfterContent
   }
+}
 }
 
 </script>
 
 <style scoped>
+
+p,textarea{
+  font-size: 16px;
+  margin: 0;
+  font-weight: 200;
+  color: #222222;
+  font-family: sans-serif;
+}
 
 .mode-wrapper {
   display: flex;
@@ -160,7 +208,7 @@ export default {
   width: 50%;
   height: 500px;
   background: #F4F5F7;
-  padding: 25px;
+  padding: 10px;
   box-sizing: border-box;
   overflow-y: auto;
   margin: 0;
@@ -193,7 +241,7 @@ export default {
   resize: none;
 }
 
-.post-preview{
+.post-preview {
   overflow-y: auto;
   width: 100%;
 }
@@ -210,13 +258,13 @@ export default {
   border: none;
 }
 
-.submit-wrapper{
+.submit-wrapper {
   width: 80%;
   display: flex;
   justify-content: flex-end;
 }
 
-.submit-button{
+.submit-button {
   width: 100px;
   height: 50px;
   border: none;

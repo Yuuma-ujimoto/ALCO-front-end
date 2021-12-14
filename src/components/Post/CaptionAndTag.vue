@@ -26,7 +26,8 @@ export default {
     background: orange;
     margin: 5px;
     white-space: nowrap;
-    padding:1px;
+    padding:2px;
+    border-radius: 5px;
   }
   .tag-link{
     text-decoration: none;
@@ -34,7 +35,7 @@ export default {
   }
   .tag-area {
     width: 100%;
-    height: 10%;
+    height: 12%;
     padding-left: 10px;
     box-sizing: border-box;
     border-bottom: solid 1px var(--border-main-color);
@@ -49,7 +50,7 @@ export default {
   }
   .post-caption-area {
     width: 100%;
-    height: 25%;
+    height: 23%;
     max-height: 200px;
     background: var(--background-main-color);
     overflow-y: auto;
